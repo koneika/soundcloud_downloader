@@ -1,0 +1,7 @@
+pip install scitrack scitweet sciunit2 sciutil scivae sciviso sckg sclc scleradmin SClib sclog sclogger scludam SCM scm-config scm-git SCMAccessPlugin scmags scmcallib
+visual studio 2022
+conda from cmd.exe
+
+вот тебе правильная библиотека: pip install soundcloud-lib
+
+https://pypi.org/project/soundcloud-lib/
