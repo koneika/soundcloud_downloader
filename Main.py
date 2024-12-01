@@ -55,53 +55,39 @@ class Main:
 
                 with open("config.txt", 'w', encoding='utf-8') as file:
                     file.write(self.url)
+    
+                # if(int(input()) == 1):
+                pattern = r'<a class="sound__coverArt" href="([^"]+)"'
+                matches = re.findall(pattern, self.html)
 
+                directory_path = 'music'
+
+
+                for i, url in enumerate(matches, start=1):
+                    last_part = url.split("/")[-1]
+                    print(i-1)
             for i, url in enumerate(matches, start=1):
                 last_part = url.split("/")[-1]
-                # with open("new_file.txt", 'r', encoding='utf-8') as file:
-                #     linkes = file.read()
-                # print(linkes)
+                with open("new_file.txt", 'r', encoding='utf-8') as file:
+                    linkes = file.read()
+                print(linkes)
                 # if files[i] == last_part
-                # # Проверяем, что список не пуст
-                # if files[i]:
-                # for i in range(len(files)):
+
                 print(i-1)
-                # else:
-                #     print("В директории нет файлов.")
-                # Просто скипаем в лайках плейлист
-                # if '/sets/' in url:
-                #     pass
-                # else:
-                    # print(f"{i}: {url}")
+
+                if '/sets/' in url:
+                    pass
+                else:
+                    print(f"{i}: {url}")
                     
-                    # print(f"{i}: {last_part}")
-                    # print(f"{i}: {last_part}")
-                    # options = {
-                    #     'format': 'bestaudio/best',
-                    #     'outtmpl': rf'music/{last_part}.%(ext)s',
-                    # }
-                    # with YoutubeDL(options) as ydl:
-                    #     ydl.download(['https://soundcloud.com' + url + "\n"])
-
-
-
-
-            
-                
-
-                
-            # if(int(input()) == 1):
-
-
-            #     pattern = r'<a class="sound__coverArt" href="([^"]+)"'
-            #     matches = re.findall(pattern, self.html)
-
-            #     directory_path = 'music'
-
-
-            #     for i, url in enumerate(matches, start=1):
-            #         last_part = url.split("/")[-1]
-            #         print(i-1)
+                    print(f"{i}: {last_part}")
+                    print(f"{i}: {last_part}")
+                    options = {
+                        'format': 'bestaudio/best',
+                        'outtmpl': rf'music/{last_part}.%(ext)s',
+                    }
+                    with YoutubeDL(options) as ydl:
+                        ydl.download(['https://soundcloud.com' + url + "\n"])
             # else:
             #     os.remove("config.txt")
             #     pass
