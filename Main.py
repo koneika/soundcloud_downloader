@@ -13,32 +13,33 @@ class Main:
         self.html = ""
         self.running = True
 
-    # chatgpt
-    async def scrape_dynamic_page(self, url):
+    async def fetch_dynamic_html(self, url, step=100, delay=0.1):
         async with async_playwright() as p:
-            browser = await p.chromium.launch()
-            page = await browser.new_page()
-            await page.goto(self.url)
-
-            last_height = await page.evaluate("document.body.scrollHeight")
-
+            browser = await p.chromium.launch(headless=True)
+            page = await (await browser.new_context()).new_page()
+            await page.goto(url, wait_until="domcontentloaded")
             while True:
-                await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-
-                await page.wait_for_timeout(1000)
-
-                new_height = await page.evaluate("document.body.scrollHeight")
-                if new_height == last_height:
+                previous_height = await page.evaluate("window.scrollY + window.innerHeight")
+                await page.evaluate(f"window.scrollBy(0, {step})")
+                await asyncio.sleep(delay)
+                current_height = await page.evaluate("window.scrollY + window.innerHeight")
+                if current_height >= await page.evaluate("document.body.scrollHeight") or current_height == previous_height:
                     break
-                last_height = new_height
-
-            html_content = await page.content()
+            html = await page.content()
             await browser.close()
-            return html_content
+            return html
 
-    # little mine
     async def main(self):
         while self.running:
+            # if os.path.exists("config.txt"):
+            #     with open("config.txt", 'r', encoding='utf-8') as file:
+            #         self.url = file.read()
+
+            #     print("Do you want to continue?\n" +
+            #             "with this url: " + self.url + "\n" +
+            #             "1. yes\n" + 
+            #             "2. no")
+
             if not os.path.exists("config.txt"):
                 print("Write your url like this \"https://soundcloud.com/username*/likes\"\n" +
                     "Which is from likes:")
@@ -49,43 +50,61 @@ class Main:
 
                 self.html = await self.scrape_dynamic_page(self.url)
 
-                # try-except, then open for a write
                 with open("fully_loaded_page.html", 'w', encoding='utf-8') as file:
                     file.write(self.html)
 
-                # # try-except reading
-                # with open("fully_loaded_page.html", 'r', encoding='utf-8') as file:
-                #     html = file.read()
-                # html = await scrape_dynamic_page(url)
-
                 with open("config.txt", 'w', encoding='utf-8') as file:
                     file.write(self.url)
-            elif os.path.exists("config.txt"):
-                print("Do you want to continue?\n" +
-                        "with this url: " + self.url + "\n" +
-                        "1. yes\n" + 
-                        "2. no")
+
+            for i, url in enumerate(matches, start=1):
+                last_part = url.split("/")[-1]
+                # with open("new_file.txt", 'r', encoding='utf-8') as file:
+                #     linkes = file.read()
+                # print(linkes)
+                # if files[i] == last_part
+                # # Проверяем, что список не пуст
+                # if files[i]:
+                # for i in range(len(files)):
+                print(i-1)
+                # else:
+                #     print("В директории нет файлов.")
+                # Просто скипаем в лайках плейлист
+                # if '/sets/' in url:
+                #     pass
+                # else:
+                    # print(f"{i}: {url}")
+                    
+                    # print(f"{i}: {last_part}")
+                    # print(f"{i}: {last_part}")
+                    # options = {
+                    #     'format': 'bestaudio/best',
+                    #     'outtmpl': rf'music/{last_part}.%(ext)s',
+                    # }
+                    # with YoutubeDL(options) as ydl:
+                    #     ydl.download(['https://soundcloud.com' + url + "\n"])
+
+
+
+
             
-                # try-except reading
-                with open("config.txt", 'r', encoding='utf-8') as file:
-                    self.url = file.read()
+                
 
                 
-                if(int(input()) == 1):
+            # if(int(input()) == 1):
 
 
-                    pattern = r'<a class="sound__coverArt" href="([^"]+)"'
-                    matches = re.findall(pattern, self.html)
+            #     pattern = r'<a class="sound__coverArt" href="([^"]+)"'
+            #     matches = re.findall(pattern, self.html)
 
-                    directory_path = 'music'
+            #     directory_path = 'music'
 
 
-                    for i, url in enumerate(matches, start=1):
-                        last_part = url.split("/")[-1]
-                        print(i-1)
-                else:
-                    os.remove("config.txt")
-                    pass
+            #     for i, url in enumerate(matches, start=1):
+            #         last_part = url.split("/")[-1]
+            #         print(i-1)
+            # else:
+            #     os.remove("config.txt")
+            #     pass
 
 if __name__ == "__main__":
     start = Main()
