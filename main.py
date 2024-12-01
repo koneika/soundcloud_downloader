@@ -1,3 +1,4 @@
+# work with chatgpt LMAO
 import asyncio
 import re
 import os
@@ -33,34 +34,38 @@ async def scrape_dynamic_page(url):
         await browser.close()
         return html_content
 
-# Запуск асинхронной функции
+
 async def main():
-    ###
-    # короче тут можно сделать автоматически спрашивать человека continue with 
-    # https://sound... если вдруг чё программа остановилась
-    # автоматизация короче такая темка, позже сделаем
-    ###
 
-    # html = "https://soundcloud/username/likes"
-
+    url = ''
     if not os.path.exists("config.txt"):
         print("write your url of likes musics from your web-browser, " +
         "should be looks like this: https://soundcloud/username/likes")
         url = input()
-        with open("fully_loaded_page.html", 'r', encoding='utf-8') as file:
-            html = file.read()
-
         html = await scrape_dynamic_page(url)
 
-        with open("fully_loaded_page.html", 'w') as file:
+        # try-except, then open for a write
+        with open("fully_loaded_page.html", 'w', encoding='utf-8') as file:
             file.write(html)
+
+        # # try-except reading
+        # with open("fully_loaded_page.html", 'r', encoding='utf-8') as file:
+        #     html = file.read()
+        # html = await scrape_dynamic_page(url)
+
+        
+
+        with open("config.txt", 'w', encoding='utf-8') as file:
+            file.write(url)
     else:
+        # try-except reading
         with open("config.txt", 'r', encoding='utf-8') as file:
             url = file.read()
 
-        print("do you want to continue? with this url: " + url)
-        print(1. yes)
-        print(2. no)
+        print("do you want to continue? with this url: " + url + "\n" +
+        "1. yes\n" + 
+        "2. no")
+        choose = input()
 
 
     linkes = ""
