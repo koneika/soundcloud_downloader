@@ -1,4 +1,4 @@
-# work with chatgpt LMAOS
+# work with chatgpt LMAO
 import asyncio
 import re
 import os
@@ -53,7 +53,7 @@ class Main:
                         "2. no")
                 self.choose = input()
 
-            if(self.choose == "2" or not os.path.exists("config.txt")):
+            if(self.choose == "1" or not os.path.exists("config.txt")):
                 if not os.path.exists("config.txt"):
                     print("Write your url like this \"https://soundcloud.com/username*/likes\"\n" +
                         "Which is from likes:")
@@ -69,42 +69,41 @@ class Main:
 
                     with open("config.txt", 'w', encoding='utf-8') as file:
                         file.write(self.url)
-                elif os.path.exists("config.txt"):
-                    # if(int(input()) == 1):
-                    pattern = r'<a class="sound__coverArt" href="([^"]+)"'
-                    matches = re.findall(pattern, self.html)
+                # if(int(input()) == 1):
+                pattern = r'<a class="sound__coverArt" href="([^"]+)"'
+                matches = re.findall(pattern, self.html)
 
-                    directory_path = 'music'
+                directory_path = 'music'
 
 
-                    for i, url in enumerate(matches, start=1):
-                        last_part = url.split("/")[-1]
-                        print(i-1)
+                # for i, url in enumerate(matches, start=1):
+                #     last_part = url.split("/")[-1]
+                #     print(i-1)
 
-                    for i, url in enumerate(matches, start=1):
-                        last_part = url.split("/")[-1]
+                for i, url in enumerate(matches, start=1):
+                    last_part = url.split("/")[-1]
+                    
+                    # with open("new_file.txt", 'r', encoding='utf-8') as file:
+                    #     linkes = file.read()
+                    # print(linkes)
+                    # if files[i] == last_part
+
+                    print(i-1)
+
+                    if '/sets/' in url:
+                        pass
+                    else:
+                        print(f"{i}: {url}")
                         
-                        # with open("new_file.txt", 'r', encoding='utf-8') as file:
-                        #     linkes = file.read()
-                        # print(linkes)
-                        # if files[i] == last_part
-
-                        print(i-1)
-
-                        if '/sets/' in url:
-                            pass
-                        else:
-                            print(f"{i}: {url}")
-                            
-                            print(f"{i}: {last_part}")
-                            print(f"{i}: {last_part}")
-                            options = {
-                                'format': 'bestaudio/best',
-                                'outtmpl': rf'music/{last_part}.%(ext)s',
-                            }
-                            with YoutubeDL(options) as ydl:
-                                ydl.download(['https://soundcloud.com' + url + "\n"])
-            elif(self.choose == "1"):
+                        print(f"{i}: {last_part}")
+                        print(f"{i}: {last_part}")
+                        options = {
+                            'format': 'bestaudio/best',
+                            'outtmpl': rf'music/{last_part}.%(ext)s',
+                        }
+                        with YoutubeDL(options) as ydl:
+                            ydl.download(['https://soundcloud.com' + url + "\n"])
+            elif(self.choose == "2"):
                 os.remove("config.txt")
                 pass
                 
