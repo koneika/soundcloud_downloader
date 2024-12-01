@@ -36,12 +36,14 @@ class Main:
             return html_content
 
     # little mine
-    async def main(self, url, html):
+    async def main(self):
         if not os.path.exists("config.txt"):
-            print("write your url of likes musics from your web-browser, " +
-            "should be looks like this: https://soundcloud.com/username/likes")
+            print("Write your url like this \"https://soundcloud.com/username*/likes\"\n" +
+                  "Which is from likes:")
+
             self.url = input()
             self.html = await self.scrape_dynamic_page(self.url)
+
             print(self.html)
             # try-except, then open for a write
             with open("fully_loaded_page.html", 'w', encoding='utf-8') as file:
@@ -59,58 +61,29 @@ class Main:
             with open("config.txt", 'r', encoding='utf-8') as file:
                 self.url = file.read()
 
-            print("do you want to continue? with this url: " + self.url + "\n" +
-            "1. yes\n" + 
-            "2. no")
-            choose = input()
+            print("Do you want to continue?\n" +
+                  "with this url: " + self.url + "\n" +
+                  "1. yes\n" + 
+                  "2. no")
+            if(int(input()) == 1):
 
 
-            pattern = r'<a class="sound__coverArt" href="([^"]+)"'
-            matches = re.findall(pattern, html)
+                pattern = r'<a class="sound__coverArt" href="([^"]+)"'
+                matches = re.findall(pattern, self.html)
 
-            # if last_part
-            directory_path = 'music'
+                directory_path = 'music'
 
-            files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
-            print("Файлы в директории:", files)
-
-            # # check
-            # with open("new_file.txt", 'w', encoding='utf-8') as file:
-            #     file.write("")
-            # for i, url in enumerate(matches, start=1):
-            #     with open("new_file.txt", 'a', encoding='utf-8') as file:
-            #         file.write(url + "\n")
-
-            for i, url in enumerate(matches, start=1):
-                last_part = url.split("/")[-1]
-                # with open("new_file.txt", 'r', encoding='utf-8') as file:
-                #     linkes = file.read()
-                # print(linkes)
-                # if files[i] == last_part
-
-                # if files[i]:
-                # for i in range(len(files)):
-                print(i-1)
+                files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
+                print("Файлы в директории:", files)
 
 
-                # else:
-                #     print("В директории нет файлов.")
-
-                # if '/sets/' in url:
-                #     pass
-                # else:
-                    # print(f"{i}: {url}")
-                    
-                    # print(f"{i}: {last_part}")
-
-                    # print(f"{i}: {last_part}")
-                    # options = {
-                    #     'format': 'bestaudio/best',
-                    #     'outtmpl': rf'music/{last_part}.%(ext)s',
-                    # }
-
-                    # with YoutubeDL(options) as ydl:
-                    #     ydl.download(['https://soundcloud.com' + url + "\n"])
+                for i, url in enumerate(matches, start=1):
+                    last_part = url.split("/")[-1]
+                    print(i-1)
+            else:
+                with open("config.txt", 'w', encoding='utf-8') as file:
+                    file.write("")
+                return
 
 if __name__ == "__main__":
     start = Main()
