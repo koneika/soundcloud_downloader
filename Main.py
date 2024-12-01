@@ -103,12 +103,13 @@ class Main:
                         }
                         with YoutubeDL(options) as ydl:
                             ydl.download(['https://soundcloud.com' + url + "\n"])
+                    self.running = False
             elif(self.choose == "2"):
                 os.remove("config.txt")
                 pass
                 
             
-            self.running = False
+            
 if __name__ == "__main__":
     start = Main()
     asyncio.run(start.main())
