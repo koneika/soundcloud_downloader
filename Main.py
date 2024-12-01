@@ -11,6 +11,7 @@ class Main:
     def __init__(self):
         self.url = ''
         self.html = ""
+        self.running = True
 
     # chatgpt
     async def scrape_dynamic_page(self, url):
@@ -37,53 +38,54 @@ class Main:
 
     # little mine
     async def main(self):
-        if not os.path.exists("config.txt"):
-            print("Write your url like this \"https://soundcloud.com/username*/likes\"\n" +
-                  "Which is from likes:")
+        while self.running:
+            if not os.path.exists("config.txt"):
+                print("Write your url like this \"https://soundcloud.com/username*/likes\"\n" +
+                    "Which is from likes:")
 
-            self.url = input()
-            self.html = await self.scrape_dynamic_page(self.url)
+                self.url = input()
+                print("Hold on, it takes a lot of times if you have a lot of musics from your\n" +
+                      "account")
 
-            print(self.html)
-            # try-except, then open for a write
-            with open("fully_loaded_page.html", 'w', encoding='utf-8') as file:
-                file.write(self.html)
+                self.html = await self.scrape_dynamic_page(self.url)
 
-            # # try-except reading
-            # with open("fully_loaded_page.html", 'r', encoding='utf-8') as file:
-            #     html = file.read()
-            # html = await scrape_dynamic_page(url)
+                # try-except, then open for a write
+                with open("fully_loaded_page.html", 'w', encoding='utf-8') as file:
+                    file.write(self.html)
 
-            with open("config.txt", 'w', encoding='utf-8') as file:
-                file.write(self.url)
-        else:
-            # try-except reading
-            with open("config.txt", 'r', encoding='utf-8') as file:
-                self.url = file.read()
+                # # try-except reading
+                # with open("fully_loaded_page.html", 'r', encoding='utf-8') as file:
+                #     html = file.read()
+                # html = await scrape_dynamic_page(url)
 
-            print("Do you want to continue?\n" +
-                  "with this url: " + self.url + "\n" +
-                  "1. yes\n" + 
-                  "2. no")
-            if(int(input()) == 1):
-
-
-                pattern = r'<a class="sound__coverArt" href="([^"]+)"'
-                matches = re.findall(pattern, self.html)
-
-                directory_path = 'music'
-
-                files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
-                print("Файлы в директории:", files)
-
-
-                for i, url in enumerate(matches, start=1):
-                    last_part = url.split("/")[-1]
-                    print(i-1)
-            else:
                 with open("config.txt", 'w', encoding='utf-8') as file:
-                    file.write("")
-                return
+                    file.write(self.url)
+            elif os.path.exists("config.txt"):
+                print("Do you want to continue?\n" +
+                        "with this url: " + self.url + "\n" +
+                        "1. yes\n" + 
+                        "2. no")
+            
+                # try-except reading
+                with open("config.txt", 'r', encoding='utf-8') as file:
+                    self.url = file.read()
+
+                
+                if(int(input()) == 1):
+
+
+                    pattern = r'<a class="sound__coverArt" href="([^"]+)"'
+                    matches = re.findall(pattern, self.html)
+
+                    directory_path = 'music'
+
+
+                    for i, url in enumerate(matches, start=1):
+                        last_part = url.split("/")[-1]
+                        print(i-1)
+                else:
+                    os.remove("config.txt")
+                    pass
 
 if __name__ == "__main__":
     start = Main()
